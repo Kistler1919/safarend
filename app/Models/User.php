@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Api\Post;
+use App\Models\Api\Status;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -19,8 +21,10 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
+        'user_identifier'
     ];
 
     /**
@@ -62,5 +66,30 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+
+    public function status()
+    {
+        return $this->hasMany(Status::class);
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    public function toArray()
+    {
+        return [
+            'identifier' => $this->user_identifier,
+            'name' => $this->name,
+            'username' => $this->username,
+            'email' => $this->email,
+            'friends' => $this->friends,
+            'images' => $this->images,
+            'updates' => $this->status,
+            'posts' => $this->posts,
+        ];
     }
 }

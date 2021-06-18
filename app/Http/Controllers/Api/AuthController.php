@@ -3,19 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
+use App\Helpers\MiscHelpers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
+    protected $miscHelpers;
+
      /**
      * Create a new AuthController instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(MiscHelpers $miscHelpers)
     {
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->miscHelpers = $miscHelpers;
     }
 
     /**
@@ -41,6 +45,8 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        $identifier = $this->miscHelpers->IDGenerator(new User, 'user_identifier', 8, 'AUTHC');
+
         $fields = $request->validate([
             'name' => 'required|string|min:3',
             'username' => 'required|string|unique:users,username',
@@ -50,9 +56,10 @@ class AuthController extends Controller
 
         User::create([
             'name' => $fields['name'],
+            'user_identifier' => $identifier,
             'username' => $fields['username'],
             'email' => $fields['email'],
-            'password' => bcrypt($fields['password'])
+            'password' => bcrypt($fields['password']),
         ]);
 
         return $this->login($request);

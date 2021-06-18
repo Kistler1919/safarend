@@ -5,11 +5,11 @@ namespace App\Models\Api;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model
+class Status extends Model
 {
     use HasFactory;
-    
-    protected $fillable = ['identifier', 'title', 'user_id', 'slug', 'content'];
+
+    protected $fillable = ['status', 'user_id'];
 
     public function user()
     {
@@ -19,10 +19,8 @@ class Post extends Model
     public function toArray()
     {
         return [
-            'identifier' => $this->identifier,
-            'title' => $this->title,
-            'slug' => $this->slug,
-            'content' => $this->content,
+            'id' => $this->id,
+            'status' => $this->status,
         ];
     }
 }
