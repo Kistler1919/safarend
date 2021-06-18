@@ -2,9 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\PostController;
-use App\Http\Controllers\Api\StatusController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\HouseController;
+use App\Http\Controllers\Api\StatusController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,12 @@ Route::group([
     Route::post('posts', [PostController::class, 'store']);
     Route::patch('posts/{id}', [PostController::class, 'update']);
     Route::delete('posts/{id}', [PostController::class, 'destroy']);
+
+    // Houses
+    Route::post('houses', [HouseController::class, 'store']);
+    Route::patch('houses/{id}', [HouseController::class, 'update']);
+    Route::delete('houses/{id}', [HouseController::class, 'destroy']);
+
     // Statuses
     Route::post('status', [StatusController::class, 'store']);
     Route::get('status', [StatusController::class, 'index']);
@@ -61,6 +68,10 @@ Route::group([
     // Posts
     Route::get('posts', [PostController::class, 'index']);
     Route::get('posts/{id}', [PostController::class, 'show']);
+    // Houses
+    Route::get('houses', [HouseController::class, 'index']);
+    Route::get('houses/{id}', [HouseController::class, 'show']);
+
     // Statuses
     Route::get('status', [StatusController::class, 'index']);
 });

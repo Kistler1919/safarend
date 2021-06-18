@@ -45,7 +45,7 @@ class PostController extends Controller
             'slug' => $slug
         ]);
 
-        $post->save();
+        // $post->save();
         
         return $post;
     }

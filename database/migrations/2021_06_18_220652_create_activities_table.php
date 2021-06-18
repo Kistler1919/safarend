@@ -15,6 +15,8 @@ class CreateActivitiesTable extends Migration
     {
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
+            
+            $table->string('identifier');
             $table->string('thumbnail');
             $table->string('venue');
             $table->string('price');

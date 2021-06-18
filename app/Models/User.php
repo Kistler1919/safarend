@@ -3,7 +3,10 @@
 namespace App\Models;
 
 use App\Models\Api\Post;
+use App\Models\Api\House;
 use App\Models\Api\Status;
+use App\Models\Api\Activity;
+use App\Models\Api\Experience;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -79,6 +82,21 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Post::class);
     }
 
+    public function activities()
+    {
+        return $this->hasMany(Activity::class);
+    }
+
+    public function experiences()
+    {
+        return $this->hasMany(Experience::class);
+    }
+    
+    public function houses()
+    {
+        return $this->hasMany(House::class);
+    }
+
     public function toArray()
     {
         return [
@@ -86,10 +104,11 @@ class User extends Authenticatable implements JWTSubject
             'name' => $this->name,
             'username' => $this->username,
             'email' => $this->email,
-            'friends' => $this->friends,
-            'images' => $this->images,
-            'updates' => $this->status,
+            'statuses' => $this->status,
             'posts' => $this->posts,
+            'houses' => $this->houses,
+            'experiences' => $this->experiences,
+            'activities' => $this->activities,
         ];
     }
 }

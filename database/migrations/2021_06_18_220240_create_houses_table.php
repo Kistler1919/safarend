@@ -17,6 +17,7 @@ class CreateHousesTable extends Migration
             $table->id();
 
             $table->string('title');
+            $table->string('identifier');
             $table->string('image_url')->nullable();
             $table->string('type')->nullable();
             $table->text('description');
