@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\HouseController;
 use App\Http\Controllers\Api\StatusController;
+use App\Http\Controllers\Api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,11 @@ Route::group([
     'prefix' => 'v1/user'
 ], function() {
     Route::get('me', [AuthController::class, 'me']);
+
+    // Friends
+    Route::post('friend/{id}', [UserController::class, 'newFriend']);
+    Route::get('friend', [UserController::class, 'index']);
+
     // Posts
     Route::post('posts', [PostController::class, 'store']);
     Route::patch('posts/{id}', [PostController::class, 'update']);
@@ -65,6 +71,9 @@ Route::group([
 Route::group([
     'prefix' => 'v1/user'
 ], function() {
+
+    // Friends
+
     // Posts
     Route::get('posts', [PostController::class, 'index']);
     Route::get('posts/{id}', [PostController::class, 'show']);

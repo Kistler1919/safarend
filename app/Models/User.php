@@ -97,6 +97,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(House::class);
     }
 
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, 'user_friends', 'user_id', 'friend_id');
+    }
+
     public function toArray()
     {
         return [
@@ -104,6 +109,7 @@ class User extends Authenticatable implements JWTSubject
             'name' => $this->name,
             'username' => $this->username,
             'email' => $this->email,
+            'friends' => $this->friends,
             'statuses' => $this->status,
             'posts' => $this->posts,
             'houses' => $this->houses,
