@@ -4,21 +4,12 @@ use App\Http\Controllers\Api\ActivityController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ExperienceController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\HouseController;
 use App\Http\Controllers\Api\StatusController;
 use App\Http\Controllers\Api\UserController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -64,6 +55,11 @@ Route::group([
     Route::post('activities', [ActivityController::class, 'store']);
     Route::patch('activities/{id}', [ActivityController::class, 'update']);
     Route::delete('activities/{id}', [ActivityController::class, 'destroy']);
+    
+    // Experiences
+    Route::post('experiences', [ExperienceController::class, 'store']);
+    Route::patch('experiences/{id}', [ExperienceController::class, 'update']);
+    Route::delete('experiences/{id}', [ExperienceController::class, 'destroy']);
 
     // Statuses
     Route::post('status', [StatusController::class, 'store']);
@@ -91,6 +87,10 @@ Route::group([
     // Activities
     Route::get('activities', [ActivityController::class, 'index']);
     Route::get('activities/{id}', [ActivityController::class, 'show']);
+    
+    // Experiences
+    Route::get('experiences', [ExperienceController::class, 'index']);
+    Route::get('experiences/{id}', [ExperienceController::class, 'show']);
 
     // Statuses
     Route::get('status', [StatusController::class, 'index']);

@@ -2,85 +2,83 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\MiscHelpers;
 use Illuminate\Http\Request;
 use App\Models\Api\Experience;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class ExperienceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    protected $miscHelpers;
+
+    public function __construct(MiscHelpers $miscHelpers)
+    {
+        $this->miscHelpers = $miscHelpers;
+    }
+
     public function index()
     {
-        //
+        $experiences = Experience::all();
+        return response()->json($experiences);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $userId = Auth::user()->id;
+
+        $fields = $request->validate([
+            'title' => 'required|string',
+            'address' => 'string',
+            'description' => 'required|string',
+            'exp_banner' => 'required|string',
+            'rating' => 'required|numeric',
+            'lat' => 'numeric',
+            'lng' => 'numeric',
+        ]);
+
+        $identifier = $this->miscHelpers->IDGenerator(new Experience, 'identifier', 8, 'act');
+
+        $house = Experience::create([
+            'user_id' => $userId,
+            'identifier' => $identifier,
+            'title' => $fields['title'],
+            'address' => $fields['address'],
+            'description' => $fields['description'],
+            'exp_banner' => $fields['exp_banner'],
+            'rating' => $fields['rating'],
+            'lat' => $fields['lat'],
+            'lng' => $fields['lng'],
+        ]);
+        
+        return response()->json($house);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Api\Experience  $experience
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Experience $experience)
+    public function show($id)
     {
-        //
+        $experience = Experience::where('id', $id)->first();
+        return response()->json($experience);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Api\Experience  $experience
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Experience $experience)
+    public function update(Request $request, $id)
     {
-        //
+        $newData = array();
+        $newData['title'] = $request->title;
+        $newData['address'] = $request->address;
+        $newData['description'] = $request->description;
+        $newData['exp_banner'] = $request->exp_banner;
+        $newData['rating'] = $request->rating;
+        $newData['lat'] = $request->lat;
+        $newData['lng'] = $request->lng;
+        
+        Experience::where('id', $id)->update($newData);
+
+        return response()->json("Experience updated successfully!");
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Api\Experience  $experience
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Experience $experience)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Api\Experience  $experience
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Experience $experience)
-    {
-        //
+        Experience::where('id', $id)->first()->delete();
+        return response()->json("Experience deleted!");
     }
 }
