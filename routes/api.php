@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ActivityController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -58,6 +59,11 @@ Route::group([
     Route::post('houses', [HouseController::class, 'store']);
     Route::patch('houses/{id}', [HouseController::class, 'update']);
     Route::delete('houses/{id}', [HouseController::class, 'destroy']);
+    
+    // Activities
+    Route::post('activities', [ActivityController::class, 'store']);
+    Route::patch('activities/{id}', [ActivityController::class, 'update']);
+    Route::delete('activities/{id}', [ActivityController::class, 'destroy']);
 
     // Statuses
     Route::post('status', [StatusController::class, 'store']);
@@ -77,9 +83,14 @@ Route::group([
     // Posts
     Route::get('posts', [PostController::class, 'index']);
     Route::get('posts/{id}', [PostController::class, 'show']);
+    
     // Houses
     Route::get('houses', [HouseController::class, 'index']);
     Route::get('houses/{id}', [HouseController::class, 'show']);
+    
+    // Activities
+    Route::get('activities', [ActivityController::class, 'index']);
+    Route::get('activities/{id}', [ActivityController::class, 'show']);
 
     // Statuses
     Route::get('status', [StatusController::class, 'index']);

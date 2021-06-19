@@ -1,85 +1,84 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Helpers\MiscHelpers;
 use App\Models\Api\Activity;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class ActivityController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    protected $miscHelpers;
+
+    public function __construct(MiscHelpers $miscHelpers)
+    {
+        $this->miscHelpers = $miscHelpers;
+    }
+
     public function index()
     {
-        //
+        $activities = Activity::all();
+        return response()->json($activities);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $userId = Auth::user()->id;
+
+        $fields = $request->validate([
+            'type' => 'required|string',
+            'venue' => 'required|string',
+            'price' => 'required|string',
+            'thumbnail' => 'required|string',
+            'date' => 'required|string',
+            'start_time' => 'required|string',
+            'end_time' => 'required|string',
+        ]);
+
+        $identifier = $this->miscHelpers->IDGenerator(new Activity, 'identifier', 8, 'act');
+
+        $house = Activity::create([
+            'user_id' => $userId,
+            'identifier' => $identifier,
+            'thumbnail' => $fields['thumbnail'],
+            'venue' => $fields['venue'],
+            'price' => $fields['price'],
+            'type' => $fields['type'],
+            'date' => $fields['date'],
+            'start_time' => $fields['start_time'],
+            'end_time' => $fields['end_time'],
+        ]);
+        
+        return response()->json($house);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Api\Activity  $activity
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Activity $activity)
+    public function show($id)
     {
-        //
+        $activity = Activity::where('id', $id)->first();
+        return response()->json($activity);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Api\Activity  $activity
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Activity $activity)
+    public function update(Request $request, $id)
     {
-        //
+        $newData = array();
+        $newData['venue'] = $request->venue;
+        $newData['type'] = $request->type;
+        $newData['price'] = $request->price;
+        $newData['thumbnail'] = $request->thumbnail;
+        $newData['date'] = $request->date;
+        $newData['start_time'] = $request->start_time;
+        $newData['end_time'] = $request->end_time;
+        
+        Activity::where('id', $id)->update($newData);
+
+        return response()->json("Activity updated successfully!");
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Api\Activity  $activity
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Activity $activity)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Api\Activity  $activity
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Activity $activity)
-    {
-        //
+        Activity::where('id', $id)->first()->delete();
+        return response()->json("Activity deleted!");
     }
 }
